@@ -59,6 +59,6 @@ def query(q_str, *args):
             resp.append(row)
         return resp
 
-
+# TODO: definition to load credentials fron .env
 conexion = connect_db(user="root", password="121601001", database="adminpatdb", host='127.0.0.1')
 cur = get_cursor(conexion)

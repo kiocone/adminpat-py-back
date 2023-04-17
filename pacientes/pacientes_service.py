@@ -16,7 +16,7 @@ def get_paciente_by_id(index: int):
 
 
 def create_paciente(payload):
-    payload['user_id'] = 1
+    payload['user_id'] = 1  # TODO: Get user_id from request.headers after JWT implementations
     value_set = utilities.payload_to_valueset(payload)
     query(f"INSERT INTO paciente SET {value_set}")
     return {"message": "Patologo created", }, 200

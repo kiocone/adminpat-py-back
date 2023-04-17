@@ -49,5 +49,6 @@ def update_password(index: int, password: str, new_password: str):
 
 
 def signin(username, password):
+    # TODO: JWT Implementation
     q_response = query(f"SELECT username, password FROM users WHERE username='{username}'")
     return q_response[0]['username'] == username and bcrypt.checkpw(password, q_response[0]['password'])
