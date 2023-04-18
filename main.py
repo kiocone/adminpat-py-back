@@ -4,6 +4,7 @@ from markupsafe import escape
 from cups import cups_controller
 from entidad import entidad_controller
 from eps import eps_controller
+from informes import informes_controller
 from patologos import patologos_controller
 from users import users_controller
 from pacientes import pacientes_controller
@@ -15,6 +16,7 @@ app.register_blueprint(pacientes_controller.pacientes)
 app.register_blueprint(eps_controller.eps)
 app.register_blueprint(entidad_controller.entidad)
 app.register_blueprint(cups_controller.cups)
+app.register_blueprint(informes_controller.informes)
 
 
 @app.get('/<parametro>')
