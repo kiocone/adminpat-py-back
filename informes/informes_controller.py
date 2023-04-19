@@ -29,4 +29,49 @@ def update_cups():
     return response
 
 
+@informes.get('/informes/<t_informe>')
+def get_informes(t_informe):
+    if t_informe == "Q":
+        response = informes_service.get_informes_q()
+    elif t_informe == "L":
+        response = informes_service.get_informes_l()
+    elif t_informe == "C":
+        response = informes_service.get_informes_c()
+    else:
+        response = {
+            "message": f"Tipo de informe '{t_informe}' no es valido",
+            "error": "not found"
+        }, 404
+    return response
+
+
+@informes.get('/informes/Q/<int:index>')
+def get_informes_q_by_id(index=None):
+    response = informes_service.get_informes_q_by_id(index)
+    if response is False:
+        response = {
+            "message": f"Informe 'Q' with id:{index} not found",
+        }, 404
+    return response
+
+
+@informes.get('/informes/L/<int:index>')
+def get_informes_l_by_id(index=None):
+    response = informes_service.get_informes_l_by_id(index)
+    if response is False:
+        response = {
+            "message": f"Informe 'L' with id:{index} not found",
+        }, 404
+    return response
+
+
+@informes.get('/informes/C/<int:index>')
+def get_informes_c_by_id(index=None):
+    response = informes_service.get_informes_c_by_id(index)
+    if response is False:
+        response = {
+            "message": f"Informe 'C' with id:{index} not found",
+        }, 404
+    return response
+
 
