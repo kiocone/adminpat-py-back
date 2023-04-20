@@ -1,4 +1,4 @@
-from flask import Blueprint
+from flask import Blueprint, request
 from informes import informes_service
 informes = Blueprint('informes', __name__)
 
@@ -75,3 +75,18 @@ def get_informes_c_by_id(index=None):
     return response
 
 
+@informes.post('/informes/Q')
+def create_inform_q():
+    if len(request.form):
+        response = informes_service.create_inform_q(request.form.to_dict())
+    elif request.data.decode():
+        response = {
+            "message": "Data should come in form-data",
+            "error": "Bad request"
+        }, 400
+    else:
+        response = {
+            "message": "There is no data",
+            "error": "Bad request"
+        }, 400
+    return response
