@@ -107,3 +107,20 @@ def create_inform_l():
             "error": "Bad request"
         }, 400
     return response
+
+
+@informes.post('/informes/C')
+def create_inform_c():
+    if len(request.form):
+        response = informes_service.create_inform_c(request.form.to_dict())
+    elif request.data.decode():
+        response = {
+            "message": "Data should come in form-data",
+            "error": "Bad request"
+        }, 400
+    else:
+        response = {
+            "message": "There is no data",
+            "error": "Bad request"
+        }, 400
+    return response

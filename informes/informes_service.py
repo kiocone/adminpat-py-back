@@ -70,6 +70,14 @@ def create_inform_l(payload):
     return response
 
 
+def create_inform_c(payload):
+    validate_fields = ['numdoc', 'entidad', 'eps', 'paciente', 'patologo']
+    response, validated = validate_fields_inform(validate_fields, payload)
+    if validated:
+        response = build_query("C", payload)
+    return response
+
+
 def validate_fields_inform(fields, payload):
     validated = True
     response = ""
@@ -85,7 +93,10 @@ def build_query(tipo_inf, payload):
     ultimos_codigos = get_secuencia_informes()
     payload['informe_cod'] = utilities.generar_codigo_inf(tipo_inf, ultimos_codigos[ult_infomrme])
     value_set = utilities.payload_to_valueset(payload)
-    query(f"INSERT INTO informe SET {value_set}")
+    if tipo_inf == "C":
+        query(f"INSERT INTO informe{tipo_inf.lower()} SET {value_set}")
+    else:
+        query(f"INSERT INTO informe SET {value_set}")
     response = {"message": f"Informe {payload['informe_cod']} created", }, 200
     update_secuencia_informes({ult_infomrme: ultimos_codigos[ult_infomrme] + 1})
     return response
