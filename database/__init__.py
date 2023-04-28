@@ -1,6 +1,6 @@
 # Imports
 import mariadb
-
+user, password, database, host = "", "", "", ""
 
 def connect_db(
         user=None,
@@ -62,10 +62,18 @@ def query(q_str, *args):
     except mariadb.InterfaceError:
         cur.close()
         db_conn.close()
-        db_conn = connect_db(user="root", password="121601001", database="adminpatdb", host='127.0.0.1')
+        db_conn = connect_db(user, password, database, host)
         cur = get_cursor(db_conn)
+
+def load_credentials(u, p, d, h):
+    global user, password, database, host
+    user = u
+    password = p
+    database = d
+    host = h
+
 
 
 # TODO: definition to load credentials fron .env
-db_conn = connect_db(user="root", password="121601001", database="adminpatdb", host='127.0.0.1')
+db_conn = connect_db(user, password, database, host)
 cur = get_cursor(db_conn)
