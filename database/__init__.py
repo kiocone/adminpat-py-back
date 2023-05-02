@@ -1,6 +1,6 @@
 # Imports
 import mariadb
-import os
+from database import credentials
 
 
 def connect_db(
@@ -67,32 +67,7 @@ def query(q_str, *args):
         cur = get_cursor(db_conn)
 
 
-work_dir = os.getcwd()
-credentials = []
-
-try:
-    with open(f"{work_dir}/credentials.ini", "r") as config_file:
-        for line in config_file:
-            if line:
-                if "=" in line:
-                    line = line.strip()
-                    credentials.append(line.split('=')[1])
-except FileNotFoundError:
-    print("Config file dosn't exist! \rPlease define new credentials.")
-    user = input("Database username: ").strip()
-    password = input("Password: ").strip()
-    host = input("Host[127.0.0.1]: ").strip()
-    if host == "":
-        host = "127.0.0.1"
-    config_file = open("credentials.ini", "w")
-    config_file.write(f"user={user}\n")
-    credentials.append(user)
-    config_file.write(f"password={password}\n")
-    credentials.append(password)
-    config_file.write(f"host={host}\n")
-    credentials.append(host)
-    config_file.close()
-
+credentials = credentials.get_credentials()
 
 db_conn = connect_db(user=credentials[0], password=credentials[1], database="adminpatdb", host=credentials[2])
 cur = get_cursor(db_conn)
