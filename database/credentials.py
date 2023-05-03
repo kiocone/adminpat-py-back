@@ -7,10 +7,9 @@ def get_credentials():
     try:
         with open(f"{work_dir}/credentials.ini", "r") as config_file:
             for line in config_file:
-                if line:
-                    if "=" in line:
-                        line = line.strip()
-                        data.append(line.split('=')[1])
+                if "=" in line:
+                    line = line.strip()
+                    data.append(line.split('=')[1])
     except FileNotFoundError:
         print("Config file dosn't exist! \rPlease define new credentials.")
         user = input("Database username: ").strip()
