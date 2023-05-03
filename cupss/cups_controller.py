@@ -1,5 +1,5 @@
 from flask import Blueprint, request
-from cups import cups_service
+from cupss import cups_service
 cups = Blueprint('cups', __name__)
 
 

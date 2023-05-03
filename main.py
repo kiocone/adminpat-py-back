@@ -1,7 +1,7 @@
 from flask import Flask
 from markupsafe import escape
 
-from cups import cups_controller
+from cupss import cups_controller
 from entidad import entidad_controller
 from eps import eps_controller
 from informes import informes_controller
