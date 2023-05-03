@@ -17,7 +17,7 @@ app.register_blueprint(eps_controller.eps)
 app.register_blueprint(entidad_controller.entidad)
 app.register_blueprint(cups_controller.cups)
 app.register_blueprint(informes_controller.informes)
-print('App started')
+
 
 @app.get('/<parametro>')
 def panel_param(parametro):
