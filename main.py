@@ -29,7 +29,6 @@ app.register_blueprint(informes_controller.informes)
 
 @app.get('/<parametro>')
 def panel_param(parametro):
-    print(escape(parametro))
     update_log(parametro)
     return f"<h1>{parametro}</h1><p>La ruta [/{parametro}] no esta definida</p>"
 
