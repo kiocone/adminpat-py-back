@@ -1,3 +1,4 @@
+import datetime
 from flask import Flask
 from markupsafe import escape
 
@@ -8,6 +9,13 @@ from informes import informes_controller
 from patologos import patologos_controller
 from users import users_controller
 from pacientes import pacientes_controller
+
+def abrir_archivo(datos):
+    archivo = open ('eventos.txt', 'a')
+
+    archivo.write(f'{datetime.datetime.now()} - {datos}\n')
+
+    archivo.close()
 
 app = Flask(__name__)
 app.register_blueprint(patologos_controller.patologos)
@@ -22,7 +30,9 @@ app.register_blueprint(informes_controller.informes)
 @app.get('/<parametro>')
 def panel_param(parametro):
     print(escape(parametro))
+    abrir_archivo(parametro)
     return f"<h1>{parametro}</h1><p>La ruta [/{parametro}] no esta definida</p>"
+
 
 
 @app.get('/')
