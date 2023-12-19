@@ -10,6 +10,7 @@ def get_credentials():
                 if "=" in line:
                     line = line.strip()
                     data.append(line.split('=')[1])
+            config_file.close()
     except FileNotFoundError:
         print("Config file dosn't exist! \rPlease define new credentials.")
         user = input("Database username: ").strip()

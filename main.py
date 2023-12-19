@@ -1,6 +1,7 @@
 import datetime
 from flask import Flask
 from markupsafe import escape
+from flask_cors import CORS
 
 from cupss import cups_controller
 from entidad import entidad_controller
@@ -18,6 +19,8 @@ def update_log(datos):
 
 
 app = Flask(__name__)
+cors = CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
 app.register_blueprint(patologos_controller.patologos)
 app.register_blueprint(users_controller.users)
 app.register_blueprint(pacientes_controller.pacientes)

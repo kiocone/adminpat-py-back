@@ -1,1 +1,4 @@
 credentials.ini
+/home/kiocone/PycharmProjects/adminpat-py-back/**/*.pyc
+/**/*.pyc
+./**/*.pyc

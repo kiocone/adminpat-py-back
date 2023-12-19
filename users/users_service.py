@@ -27,8 +27,9 @@ def delete_user(index):
 
 
 def create_user(payload):
-    value_set = utilities.payload_to_valueset(payload)
     payload['password'] = bcrypt.hashpw(payload['password'], salt)
+    value_set = utilities.payload_to_valueset(payload)
+    print(value_set)
     query(f"INSERT INTO users SET {value_set};")
     return {"message": "User created"}, 200
 
@@ -41,6 +42,8 @@ def update_user(p_id: int, payload):
 
 def update_password(index: int, password: str, new_password: str):
     hashed_password = query(f"SELECT password FROM users where id = ?;", index)
+    if not hashed_password:
+        return False
     matched = bcrypt.checkpw(password, hashed_password[0]['password'])
     if matched:
         new_password = bcrypt.hashpw(new_password, salt)

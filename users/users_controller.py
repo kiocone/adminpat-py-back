@@ -12,6 +12,7 @@ def get_users():
 
 @users.get('/users/<int:index>')
 def get_users_by_id(index):
+    print('Get one user', index)
     response = users_service.get_user_by_id(index)
     if response is False:
         response = {
@@ -22,18 +23,24 @@ def get_users_by_id(index):
 
 @users.post('/users')
 def create_user():
-    if len(request.form):
-        response = users_service.create_user(request.form.to_dict())
-    elif request.data.decode():
-        response = {
-                "message": "Data should come in form-data",
-                "error": "Bad request"
-            }, 400
+    content_type = request.headers.get('Content-Type')
+    if content_type == 'application/json':
+        response = users_service.create_user(request.json)
     else:
-        response = {
-                "message": "There is no data",
-                "error": "Bad request"
-            }, 400
+        print('Content-Type not supported!')
+
+    #if len(request.form):
+    #    response = users_service.create_user(dict(request.json))
+    #elif request.data.decode():
+    #    response = {
+    #            "message": "Data should come in form-data",
+    #            "error": "Bad request"
+    #        }, 400
+    #else:
+    #    response = {
+    #            "message": "There is no data",
+    #            "error": "Bad request"
+    #        }, 400
     return response
 
 
