@@ -40,18 +40,18 @@ def update_user(p_id: int, payload):
     return {"message": "User updated"}, 200
 
 
-def update_password(index: int, password: str, new_password: str):
+def update_password(index: int, password_set):
     hashed_password = query(f"SELECT password FROM users where id = ?;", index)
     if not hashed_password:
         return False
-    matched = bcrypt.checkpw(password, hashed_password[0]['password'])
+    matched = bcrypt.checkpw(password_set['password'], hashed_password[0]['password'])
     if matched:
-        new_password = bcrypt.hashpw(new_password, salt)
+        new_password = bcrypt.hashpw(password_set['new_password'], salt)
         query(f"UPDATE users set password='{new_password}' WHERE id = {index};")
     return matched
 
 
-def signin(username, password):
+def login(username, password):
     # TODO: JWT Implementation
     q_response = query(f"SELECT username, password FROM users WHERE username='{username}'")
     return q_response[0]['username'] == username and bcrypt.checkpw(password, q_response[0]['password'])

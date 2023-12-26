@@ -27,48 +27,33 @@ def create_user():
     if content_type == 'application/json':
         response = users_service.create_user(request.json)
     else:
-        print('Content-Type not supported!')
-
-    #if len(request.form):
-    #    response = users_service.create_user(dict(request.json))
-    #elif request.data.decode():
-    #    response = {
-    #            "message": "Data should come in form-data",
-    #            "error": "Bad request"
-    #        }, 400
-    #else:
-    #    response = {
-    #            "message": "There is no data",
-    #            "error": "Bad request"
-    #        }, 400
+        response = {'message': 'Content-Type not supported!'}, 400
     return response
 
 
 @users.put('/users/<int:index>')
 def update_user(index):
-    if len(request.form):
-        respuesta = users_service.update_user(
-            index,
-            request.form.to_dict()
-        )
-    elif request.data.decode():
-        respuesta = "Data should come in form-data"
+    content_type = request.headers.get('Content-Type')
+    if content_type == 'application/json':
+        response = users_service.update_user(index, request.json)
     else:
-        respuesta = "There is no data"
-    return respuesta
+        response = {'message': 'Content-Type not supported!'}, 400
+    return response
 
 
 @users.delete('/users/<int:index>')
 def delete_user(index):
-    respuesta = users_service.delete_user(index)
+    if users_service.get_user_by_id(index) is not False:
+        respuesta = users_service.delete_user(index)
+    else:
+        respuesta = {'message': 'User do not exist'}, 404
     return respuesta
-
 
 @users.post('/users/<int:index>/update-password')
 def update_password(index):
-    password = request.form['password']
-    new_password = request.form['new_password']
-    matched = users_service.update_password(index, password, new_password)
+    if users_service.get_user_by_id(index) is False:
+        return {'message': 'User do not exist'}, 404
+    matched = users_service.update_password(index, request.json)
     if matched:
         response = {
                 "message": "Password updated",
@@ -81,12 +66,12 @@ def update_password(index):
     return response
 
 
-@users.post('/users/signin')
-def signin():
+@users.post('/users/login')
+def login():
     # Pending implementaion of JWT strategy
-    username = request.form['username']
-    password = request.form['password']
-    response = users_service.signin(username, password)
+    username = request.json['username']
+    password = request.json['password']
+    response = users_service.login(username, password)
     if response:
         response = {
                 "message": "Authentication Valid!",
