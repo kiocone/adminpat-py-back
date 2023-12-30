@@ -46,7 +46,7 @@ def delete_user(index):
     if users_service.get_user_by_id(index) is not False:
         respuesta = users_service.delete_user(index)
     else:
-        respuesta = {'message': 'User do not exist'}, 404
+        respuesta = {'message': 'No existe el usuario'}, 404
     return respuesta
 
 @users.post('/users/<int:index>/update-password')

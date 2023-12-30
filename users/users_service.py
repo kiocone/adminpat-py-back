@@ -23,7 +23,7 @@ def delete_user(index):
     query(f"DELETE from users WHERE id = {index};")
     return {
                 "message": "User deleted",
-            }, 200
+            }, 204
 
 
 def create_user(payload):
