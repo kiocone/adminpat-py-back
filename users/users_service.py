@@ -1,3 +1,4 @@
+import base64
 import types
 from database import query
 import bcrypt
@@ -52,6 +53,14 @@ def update_password(index: int, password_set):
 
 
 def login(username, password):
-    # TODO: JWT Implementation
+
     q_response = query(f"SELECT username, password FROM users WHERE username='{username}'")
-    return q_response[0]['username'] == username and bcrypt.checkpw(password, q_response[0]['password'])
+    
+    if q_response is not None:
+        if q_response[0]['username'] == username and bcrypt.checkpw(password, q_response[0]['password']):
+            user_data = query(f"SELECT id, username, fullname, email FROM users WHERE username='{username}'")
+            encoded_data = str(user_data[0]).encode("utf-8")
+            base64_encoded = base64.b64encode(encoded_data)
+            return True , base64_encoded
+    else:
+        return False

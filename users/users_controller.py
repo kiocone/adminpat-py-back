@@ -12,7 +12,6 @@ def get_users():
 
 @users.get('/users/<int:index>')
 def get_users_by_id(index):
-    print('Get one user', index)
     response = users_service.get_user_by_id(index)
     if response is False:
         response = {
@@ -68,15 +67,15 @@ def update_password(index):
 
 @users.post('/users/login')
 def login():
-    # Pending implementaion of JWT strategy
+    json_keys = dict(request.json).keys()
+    if 'username' not in json_keys or 'password' not in json_keys:
+        return "bad request", 400
     username = request.json['username']
     password = request.json['password']
-    response = users_service.login(username, password)
-    if response:
+    valid, token = users_service.login(username, password)
+    if valid:
         response = {
-                "message": "Authentication Valid!",
-                "data": None,
-                "error": "No error"
+                "token": str(token).split("'")[1]
             }, 200
     else:
         response = {

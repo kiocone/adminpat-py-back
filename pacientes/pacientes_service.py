@@ -3,8 +3,9 @@ from database import query
 from shared import utilities
 
 
-def get_pacientes():
-    response = query("SELECT * FROM paciente")
+def get_pacientes(pageIndex:int = 0, pageSize:int = 10):
+    offset = pageIndex * pageSize
+    response = query(f"SELECT * FROM paciente LIMIT {pageSize} OFFSET {offset}")
     return response
 
 
