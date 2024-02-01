@@ -1,13 +1,17 @@
 from flask import Blueprint, request
 from users import users_service
-
+from authentication.auth import authorize, loginUser
 users = Blueprint('users', __name__)
 
 
 @users.get('/users')
+@authorize
 def get_users():
-    response = users_service.get_users()
-    return response
+    queryParasms = request.args
+    pageIndex = queryParasms.get('pageIndex')
+    pageSize = queryParasms.get('pageSize')
+    response = users_service.get_users(int(pageIndex), int(pageSize))
+    return response, 200
 
 
 @users.get('/users/<int:index>')
@@ -72,10 +76,12 @@ def login():
         return "bad request", 400
     username = request.json['username']
     password = request.json['password']
-    valid, token = users_service.login(username, password)
+    valid, token = loginUser(username, password)
     if valid:
+        if type(token) == bytes:
+            token=str(token).split("'")[1]
         response = {
-                "token": str(token).split("'")[1]
+                "token": token
             }, 200
     else:
         response = {

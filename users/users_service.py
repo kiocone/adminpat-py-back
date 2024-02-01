@@ -1,23 +1,23 @@
-import base64
 import types
 from database import query
 import bcrypt
+from shared import utilities, config
 
-from shared import utilities
-
+default_page_size = config.default_page_size()
 salt = bcrypt.gensalt(10)
 
 
-def get_users():
-    resp = query(f"SELECT * from users;")
+def get_users(pageIndex:int = 0, pageSize:int = default_page_size):
+    offset = pageIndex * pageSize
+    resp = query(f"SELECT * from users LIMIT {pageSize} OFFSET {offset};")
     return resp
 
 
 def get_user_by_id(*args):
     response = query(f"SELECT * FROM users where id = ?;", *args)
     if types.NoneType == type(response):
-        response = [False]
-    return response[0]
+        response = False
+    return response
 
 
 def delete_user(index):
@@ -28,9 +28,12 @@ def delete_user(index):
 
 
 def create_user(payload):
+    username = payload['username']
+    q_response = query(f"SELECT id, username FROM users WHERE username='{username}'")
+    if q_response is not None:
+        return {"message": f"El usuario {username} ya existe"}, 400
     payload['password'] = bcrypt.hashpw(payload['password'], salt)
     value_set = utilities.payload_to_valueset(payload)
-    print(value_set)
     query(f"INSERT INTO users SET {value_set};")
     return {"message": "User created"}, 200
 
@@ -51,16 +54,3 @@ def update_password(index: int, password_set):
         query(f"UPDATE users set password='{new_password}' WHERE id = {index};")
     return matched
 
-
-def login(username, password):
-
-    q_response = query(f"SELECT username, password FROM users WHERE username='{username}'")
-    
-    if q_response is not None:
-        if q_response[0]['username'] == username and bcrypt.checkpw(password, q_response[0]['password']):
-            user_data = query(f"SELECT id, username, fullname, email FROM users WHERE username='{username}'")
-            encoded_data = str(user_data[0]).encode("utf-8")
-            base64_encoded = base64.b64encode(encoded_data)
-            return True , base64_encoded
-    else:
-        return False
